@@ -8,5 +8,6 @@
             context = ctx;
         }
         public IQueryable<Product> Products => context.Products;
+
     }
 }
