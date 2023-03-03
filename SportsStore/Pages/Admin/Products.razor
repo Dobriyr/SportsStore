@@ -67,7 +67,7 @@
 	public async Task DeleteProduct(Product product)
 	{
 		Repository.DeleteProduct(product);
-		await UpdateData();
+		 UpdateData();
 	}
 
 	public string GetDeatailsUrl(long id) => $"/admin/products/details/{id}";

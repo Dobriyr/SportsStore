@@ -1,5 +1,7 @@
 using SportsStore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +22,18 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddServerSideBlazor();
 
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(
+    builder.Configuration["ConnectionStrings:IdentityConnection"]));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
+
 var app = builder.Build();
 //app.MapGet("/", () => "Hello World!");
 
 app.UseStaticFiles();
 app.UseSession();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute("catpage",
     "{category}/Page{productPage:int}",
@@ -50,4 +59,6 @@ app.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
 
 
 SeedData.EnsurePopulated(app);
+IdentitySeedData.EnsurePopulated(app);
+
 app.Run();
